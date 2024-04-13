@@ -71,7 +71,7 @@ func (m ModuleInfoModel) Update(moduleInfo *ModuleInfo) error {
 	query := `
 		UPDATE module_info
 		SET module_name = $1, module_duration = $2, exam_type = $3, version = version + 1
-		WHERE id = $4
+		WHERE id = $4 AND version = $5
 		RETURNING version
 		`
 
@@ -80,9 +80,19 @@ func (m ModuleInfoModel) Update(moduleInfo *ModuleInfo) error {
 		moduleInfo.ModuleDuration,
 		pq.Array(moduleInfo.ExamType),
 		moduleInfo.ID,
+		moduleInfo.Version,
 	}
 
-	return m.DB.QueryRow(query, args...).Scan(&moduleInfo.Version)
+	err := m.DB.QueryRow(query, args...).Scan(&moduleInfo.Version)
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return ErrEditConflict
+		default:
+			return nil
+		}
+	}
+	return nil
 }
 
 func (m ModuleInfoModel) Delete(id int64) error {
