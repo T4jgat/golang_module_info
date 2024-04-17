@@ -17,11 +17,16 @@ type Models struct {
 		Update(movie *ModuleInfo) error
 		Delete(id int64) error
 	}
+
+	TeacherInfo interface {
+		GetAll() ([]*TeacherInfo, error)
+	}
 }
 
 func NewModels(db *sql.DB) Models {
 	return Models{
-		ModuleInfo: ModuleInfoModel{DB: db},
+		ModuleInfo:  ModuleInfoModel{DB: db},
+		TeacherInfo: TeacherInfoModel{DB: db},
 	}
 }
 

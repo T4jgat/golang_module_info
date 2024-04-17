@@ -1,0 +1,1 @@
+truncate table teacher_info

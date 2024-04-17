@@ -18,5 +18,7 @@ func (app *application) routes() *httprouter.Router {
 	router.HandlerFunc(http.MethodPut, "/v1/moduleinfo/:id", app.UpdateModuleInfoHandler)
 	router.HandlerFunc(http.MethodDelete, "/v1/moduleinfo/:id", app.DeleteModuleInfoHandler)
 
+	router.HandlerFunc(http.MethodGet, "/v1/teacherinfo", app.ShowAllTeachersHandler)
+
 	return router
 }
